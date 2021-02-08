@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalog.Repositories;
+using Catalog.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 
 namespace store2
 {
@@ -27,8 +31,8 @@ namespace store2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            BsonSerializer.RegisterSerializer(New GuidSeriazer(BsonType.String));
-            BsonSerializer.RegisterSerializer(New DateTimeOffsetSerializer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new GuidSeriazer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 
 
             services.AddSingleton<IMongoClient>(serviceProvider =>
@@ -38,7 +42,7 @@ namespace store2
                     .GetSection(nameof(MongoDBSettings))
                     .Get<MongoDBSettings>();
 
-                return new MongoClient(settings.ConnetionString);
+                return new MongoClient(settings.ConnectionString);
             });
             services.AddSingleton<IItemsRepository, InMemItemsRepository>();
             

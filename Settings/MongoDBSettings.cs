@@ -5,11 +5,11 @@ namespace Catalog.Settings
         public string Host { get; set; }
         public int Port { get; set; }
 
-        public string ConncetionString 
+        public string ConnectionString 
         { 
             get
             {
-                return $"mongodb://{Host}:{Post}";
+                return $"mongodb://{Host}:{Port}";
             }
         }
     }
